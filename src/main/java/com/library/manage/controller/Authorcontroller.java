@@ -70,6 +70,11 @@ public class Authorcontroller {
 		Books book = booksRepository.findById(bId).get();
       //  System.out.println(course);
         Author author = authorRepository.findById(aId).get();
+       List<Author>auth =     authorRepository.findByBooksBookId(bId);
+       if(auth.contains(author))
+       {
+    	   return false;
+       }
         if(book != null && author != null) {
           List<Books> a = author.getBooks();
 //        projectSet =  employee.getAssignedProjects();

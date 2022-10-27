@@ -47,13 +47,13 @@ public class LibrarianController {
 			  return librarian;
 		 }  
 //		    String e = 'eeeeeeeeeeee';
-			 Librarian li = new Librarian();
-			 li.setEmailId("");
-			 li.setName("");
-			 li.setPassword("");
-			 return li;
+//			 Librarian li = new Librarian();
+//			 li.setEmailId("");
+//			 li.setName("");
+//			 li.setPassword("");
+//			 return li;
 			 
 		 
-//		 return null;
+		 return null;
 	}
 }
