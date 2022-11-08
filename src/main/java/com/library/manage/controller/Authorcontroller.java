@@ -2,6 +2,7 @@ package com.library.manage.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.library.manage.Respository.AuthorRepository;
 import com.library.manage.Respository.BooksRepository;
 import com.library.manage.entity.Author;
+import com.library.manage.entity.AuthorAllBooks;
 import com.library.manage.entity.AuthorDetails;
 import com.library.manage.entity.Books;
 
@@ -41,14 +43,87 @@ public class Authorcontroller {
 		return null;
 		
 	}
-	@PutMapping("/authors/{Id}")
-	public boolean updateauthor(@PathVariable(value="Id" )long id, @RequestBody Author author) {
-		Author author1 = authorRepository.findById(id).get();
-		author1.setFirstName(author.getFirstName());
-		author1.setLastname(author.getLastname());
-		authorRepository.save(author1);
+	@GetMapping("/author/{BId}/{AId}")
+	public AuthorAllBooks getauthorbyIds(@PathVariable(value="BId" )long BId,@PathVariable(value="AId" )long AId){
 		
-		return true;
+			AuthorAllBooks al = new AuthorAllBooks();
+		Optional<Author> author = authorRepository.findById(AId);
+		
+	 Books b = new Books();
+	 Author a = new Author();
+		if(!author.isPresent())
+		{
+			return null;
+		}
+		else
+		{
+		 a = author.get();
+		}
+		
+		Optional<Books> book = booksRepository.findById(BId);
+		if(!book.isPresent())
+		{
+			return null;
+		}
+		else
+		{
+			 b = book.get();
+		}
+	
+		 al.setBookId(b.getBookId());
+		 al.setAvailableStock(b.getAvailableStock());
+		 al.setDescription(b.getDescription());
+		 al.setPageCount(b.getPageCount());
+		 al.setPublishDate(b.getPublishDate());
+		 al.setTitle(b.getTitle());
+		
+			al.setFirstname(a.getFirstName());
+			al.setLastname(a.getLastname());
+			al.setId(AId);
+
+		return al;
+
+	}
+	@PutMapping("/authors/{Id}")
+	public boolean updateauthor(@PathVariable(value="Id" )long id, @RequestBody Books book) {
+		
+//		  System.out.println(book.getAvailableStock());
+//		return true;
+//		Author author1 = authorRepository.findById(id).get();
+////		author1.setFirstName(author.getFirstName());
+////		author1.setLastname(author.getLastname());
+//		author1.setBooks(author.getBooks());
+//		authorRepository.save(author1);
+//		
+//		return true;
+		Books book2 = booksRepository.findByTitle(book.getTitle());
+		if(book2 != null)
+		{
+			return false;
+		}
+		long bookid = booksRepository.save(book).getBookId();
+		System.out.println(bookid);
+		long authorid = id;
+		 Author author = authorRepository.findById(authorid).get();
+		
+		List<Author>auth =     authorRepository.findByBooksBookId(bookid);
+	       if(auth.contains(author))
+	       {
+	    	   return false;
+	       }
+	        if(book != null && author != null) {
+	          List<Books> a = author.getBooks();
+//	        projectSet =  employee.getAssignedProjects();
+//	        projectSet.add(project);\
+	          a.add(book);
+//	        employee.setAssignedProjects(projectSet);
+	          author.setBooks(a);
+	         authorRepository.save(author);
+	         return true;
+	        }
+	        return false;
+		
+		
 		
 	}
 	@GetMapping("/authors")
@@ -59,6 +134,91 @@ public class Authorcontroller {
 			return author;
 		
 	}
+	
+	@GetMapping("/authorse")
+	public List<AuthorAllBooks> getallauthors(){
+		   List<Author> author = authorRepository.findAll();
+		   List<AuthorAllBooks>authors = new ArrayList<>();
+		  // Author at = new Author();
+		  
+		 for(int i = 0;i<author.size();i++)
+		 {  
+			 for(int j = 0;j<author.get(i).getBooks().size();j++)
+			 {
+				 AuthorAllBooks at = new AuthorAllBooks();
+				 at.setId(author.get(i).getAuthorId());
+				 at.setFirstname(author.get(i).getFirstName());
+				 at.setLastname(author.get(i).getLastname());
+				 Books b = author.get(i).getBooks().get(j);
+				 at.setBookId(b.getBookId());
+				 at.setAvailableStock(b.getAvailableStock());
+				 at.setDescription(b.getDescription());
+				 at.setPageCount(b.getPageCount());
+				 at.setPublishDate(b.getPublishDate());
+				 at.setTitle(b.getTitle());
+				
+				 
+				 
+//				 System.out.println(author.get(i).getBooks().get(j).getTitle());
+//				 System.out.println(at.getBook().getBookId());
+				 authors.add(at);
+			 }
+		 }
+		
+		
+			return authors;
+		
+	}
+	
+	
+	@GetMapping("authorwith/{val}")
+	public List<AuthorAllBooks>authornamecontain(@PathVariable(value="val") String val)
+	{
+		
+		   List<Author> author = authorRepository.findByFirstNameContaining(val);
+		   List<AuthorAllBooks>authors = new ArrayList<>();
+		   if(author == null)
+		   {
+//		   {   AuthorAllBooks at = new AuthorAllBooks();
+			   return authors;
+		   }
+//		   List<AuthorAllBooks>authors = new ArrayList<>();
+		  // Author at = new Author();
+		  
+		 for(int i = 0;i<author.size();i++)
+		 {  
+			 for(int j = 0;j<author.get(i).getBooks().size();j++)
+			 {
+				 AuthorAllBooks at = new AuthorAllBooks();
+				 at.setId(author.get(i).getAuthorId());
+				 at.setFirstname(author.get(i).getFirstName());
+				 at.setLastname(author.get(i).getLastname());
+				 Books b = author.get(i).getBooks().get(j);
+				 at.setBookId(b.getBookId());
+				 at.setAvailableStock(b.getAvailableStock());
+				 at.setDescription(b.getDescription());
+				 at.setPageCount(b.getPageCount());
+				 at.setPublishDate(b.getPublishDate());
+				 at.setTitle(b.getTitle());
+				
+				 
+				 
+//				 System.out.println(author.get(i).getBooks().get(j).getTitle());
+//				 System.out.println(at.getBook().getBookId());
+				 authors.add(at);
+			 }
+		 }
+		
+		
+			return authors;
+		
+	}
+	
+	
+	
+	
+	
+	
 	@PostMapping("/addauthor")
 	public Author createauthor( @RequestBody Author author) {
 		 return authorRepository.save(author);
@@ -68,7 +228,7 @@ public class Authorcontroller {
 		
 		
 		Books book = booksRepository.findById(bId).get();
-      //  System.out.println(course);
+      //  System.out.println(coursejgjhghjhj);
         Author author = authorRepository.findById(aId).get();
        List<Author>auth =     authorRepository.findByBooksBookId(bId);
        if(auth.contains(author))

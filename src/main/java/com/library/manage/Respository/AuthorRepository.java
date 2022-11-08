@@ -13,5 +13,6 @@ public interface AuthorRepository extends JpaRepository<Author,Long>  {
 
 	
 	List<Author>findByBooksBookId(long id);
+	List<Author>findByFirstNameContaining(String val);
 }
  

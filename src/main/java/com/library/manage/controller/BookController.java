@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.library.manage.Respository.AuthorRepository;
 import com.library.manage.Respository.BookTrackRepository;
 import com.library.manage.Respository.BooksRepository;
+import com.library.manage.entity.ApiResponse;
 import com.library.manage.entity.Author;
 import com.library.manage.entity.BookDetails;
 import com.library.manage.entity.BookTrack;
@@ -43,17 +46,22 @@ public class BookController {
 		{
 			return books;
 		}
-		return null;
+		Books book = new Books();
+		
+		return book;
 		
 	}
 	@GetMapping("/books")
 	public List<BookDetails> getbookbyId(){
 		   List<Books> books = booksRepository.findAll();
 		List<BookDetails>BookDetails = new ArrayList<>();
+		List<BookDetails>BookDetails2 = new ArrayList<>();
 		
 		for(int i = 0;i<books.size();i++)
-		{
+		{ 
+			
 			long bookid =  books.get(i).getBookId();
+		
 			BookDetails Bookdetail  = new BookDetails() ;
 			   Bookdetail.setBookId(bookid);
 			   Bookdetail.setBookName(books.get(i).getTitle());
@@ -89,7 +97,14 @@ public class BookController {
 			
 		    BookDetails.add(Bookdetail) ;
 		}
-			return BookDetails;
+		for(int i = 0;i<BookDetails.size();i++)
+		{
+			if(BookDetails.get(i).getRentedBook() != 0)
+			{
+				BookDetails2.add(BookDetails.get(i));
+			}
+		}
+			return BookDetails2;
 		
 	}
 	
@@ -97,10 +112,44 @@ public class BookController {
 	public List<Books> createBook( ) {
 		 return booksRepository.findAll();
 	}
+	//////////////////////
+	
+	@GetMapping("bookscount/{os}/{ps}")
+	public ApiResponse<Page<Books>>countbooks(@PathVariable(value="os") int os,@PathVariable(value="ps") int ps){
+		
+		Page<Books>books = booksRepository.findAll(PageRequest.of(os, ps));
+		return new ApiResponse<>(books.getSize(),books);
+		
+	}
+	
+	@GetMapping("booksbyname/{os}/{ps}/{bn}")
+	public ApiResponse<Page<Books>>bookbynamepage(@PathVariable(value="os") int os,@PathVariable(value="ps") int ps,@PathVariable(value="bn") String bn){
+		
+		Page<Books>books = booksRepository.findByTitleContaining(bn, PageRequest.of(os, ps));
+		if(books != null)
+		{
+		return new ApiResponse<>(books.getSize(),books);
+		}
+		return null;
+		
+	}
+	/////////////////////////
+	
+	
+	
+	
+	
+	
 	@PostMapping("/addbook")
-	public Books createBook( @RequestBody Books book) {
+	public boolean createBook( @RequestBody Books book) {
 //		System.out.println(book.getPageCount());
-		 return booksRepository.save(book);
+		Books books = booksRepository.findByTitle(book.getTitle());
+		if(books!=null)
+		{
+			return false;
+		}
+		  booksRepository.save(book);
+		  return true;
 	}
 	
 	
@@ -119,5 +168,9 @@ public class BookController {
         	  }
         	  return false;
          }
+         
+         
+         
+//         public Pagination<List<BookDetails>>
 
 }

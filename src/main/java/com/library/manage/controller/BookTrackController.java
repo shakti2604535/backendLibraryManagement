@@ -18,6 +18,7 @@ import com.library.manage.Respository.BookTrackRepository;
 import com.library.manage.Respository.BooksRepository;
 import com.library.manage.Respository.PersonRepository;
 import com.library.manage.entity.BookTrack;
+import com.library.manage.entity.BookTrackDetails;
 import com.library.manage.entity.Books;
 import com.library.manage.entity.PersonData;
 
@@ -34,7 +35,72 @@ public class BookTrackController {
 	private BookTrackRepository bookTrackRepository;
 	@GetMapping("/detail")
 	public List<BookTrack>getbooktrack(){
+		
+		
 		return bookTrackRepository.findAll();
+		
+		
+	}
+	@GetMapping("/detailed")
+	public List<BookTrackDetails>getbooktrackwithname(){
+		
+		
+		 List<BookTrack> bt =  bookTrackRepository.findAll();
+		 List<BookTrackDetails>btd = new ArrayList<>();
+//		 System.out.println(bt.get(0).getBookId()+"hi");
+		 
+		 for(int i = 0;i<bt.size();i++)   
+		 {
+			 
+			 BookTrackDetails bookTrackDetails = new BookTrackDetails();
+			 bookTrackDetails.setBooktrack(bt.get(i));
+			 Books b = booksRepository.findById(bt.get(i).getBookId()).get();
+			
+
+			 PersonData p = personRepository.findById(bt.get(i).getPersonId()).get();
+			
+			 bookTrackDetails.setTitle(b.getTitle());
+			 bookTrackDetails.setPersonName(p.getName());
+			 btd.add(bookTrackDetails);
+		 }
+		 return btd;
+		
+		
+	}
+	
+	@GetMapping("/book/{id}")
+	public List<BookTrackDetails>getrentedbookbyid(@PathVariable(value="id") long bookid){
+		
+		List<BookTrack>bt = bookTrackRepository.findByBookId(bookid);
+		List<BookTrackDetails>bk = new ArrayList<>();
+		if(bt.isEmpty())
+		{
+			return  null;
+		}
+		for(int i = 0;i<bt.size();i++)
+		{
+			
+//			 bookTrackDetails.setBooktrack(bt.get(i));
+			if(bt.get(i).getActualReturnDate()  == null)
+			{
+				 BookTrackDetails bookTrackDetails = new BookTrackDetails();
+				 bookTrackDetails.setBooktrack(bt.get(i));
+				 Books b = booksRepository.findById(bt.get(i).getBookId()).get();
+					
+
+				 PersonData p = personRepository.findById(bt.get(i).getPersonId()).get();
+				
+				 bookTrackDetails.setTitle(b.getTitle());
+				 bookTrackDetails.setPersonName(p.getName());
+				bk.add(bookTrackDetails);
+			}
+		}
+			
+			return bk;
+			
+//		}
+		
+		
 	}
 	@PostMapping("/assignbook")
 	public Boolean  Assignbooktoperson( @RequestBody BookTrack bookTrack) {

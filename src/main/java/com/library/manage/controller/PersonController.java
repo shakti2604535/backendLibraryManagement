@@ -78,7 +78,11 @@ private BookTrackRepository bookTrackRepository;
 				    Rentedbyperson += book.getTitle()+" ,";
 				    if(bt.getExpectedReturnDate().before(date))
 				    {
-				    	OverdueBooks += book.getTitle();
+				    	System.out.println(date);
+				    	System.out.println(bt.getExpectedReturnDate().before(date));
+				    	
+				    	OverdueBooks += book.getTitle()+",";
+				    	System.out.println(OverdueBooks);
 				    	}
 				    }
 			   }
