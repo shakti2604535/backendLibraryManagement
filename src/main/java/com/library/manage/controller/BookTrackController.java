@@ -4,6 +4,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,7 +77,7 @@ public class BookTrackController {
 		List<BookTrackDetails>bk = new ArrayList<>();
 		if(bt.isEmpty())
 		{
-			return  null;
+			return  null ;
 		}
 		for(int i = 0;i<bt.size();i++)
 		{
@@ -103,8 +105,8 @@ public class BookTrackController {
 		
 	}
 	@PostMapping("/assignbook")
-	public Boolean  Assignbooktoperson( @RequestBody BookTrack bookTrack) {
-		
+	public Boolean  Assignbooktoperson( @RequestBody @Valid BookTrack bookTrack) {
+		try {
 		Books book = booksRepository.findById(bookTrack.getBookId()).get();
 		PersonData person = personRepository.findById(bookTrack.getPersonId()).get();
 		if(book!= null && person!=null && book.getAvailableStock()>0)
@@ -114,13 +116,18 @@ public class BookTrackController {
 			{
 				book.setAvailableStock(book.getAvailableStock()-1);
 				booksRepository.save(book);
-				
+				System.out.println("i am checking");
 			 bookTrackRepository.save(bookTrack);
 			 return true;
 			}
 			  return  false; 
 		}
-		return false; 
+		return false;
+	 }
+		catch(Exception e)
+		{
+			return false;
+		}
 		
 	}
 	

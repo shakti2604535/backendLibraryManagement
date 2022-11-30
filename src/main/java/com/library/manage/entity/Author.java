@@ -3,7 +3,8 @@ package com.library.manage.entity;
 import java.util.List;
 
 import javax.persistence.*;
-
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,6 +21,8 @@ public class Author {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 	          generator="Author_sequence")
 	private Long authorId;
+	@NotNull(message = "It should not be null")
+    @NotEmpty(message = "It should not be Empty")
 	private String firstName;
 	private String Lastname;
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,14 +39,24 @@ private BookTrackRepository bookTrackRepository;
 	
 	@GetMapping("/person/{Id}")
 	public PersonData getauthorbyId(@PathVariable(value="Id" )long id){
+		try {
 		PersonData person = personRepository.findById(id).get();
 		
 		if(person != null)
 		{
 			return person;
 		}
+		
+		}
+		catch(Exception e){
+			PersonData person1 = new PersonData();
+			person1.setName("");
+			System.out.println("hiiiiiiiiiiiii");
+			return person1;
+		}
 		return null;
 		
+	
 	}
 	@GetMapping("/persons")
 	public List<PersonData> getallpersons(){
@@ -97,7 +109,7 @@ private BookTrackRepository bookTrackRepository;
 		
 	}
 	@PostMapping("/addperson")
-	public PersonData createauthor( @RequestBody PersonData person) {
+	public PersonData createauthor( @RequestBody @Valid PersonData person) {
 		 return personRepository.save(person);
 	}
 	@PutMapping("/updateperson/{Id}")

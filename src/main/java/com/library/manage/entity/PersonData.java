@@ -1,9 +1,16 @@
 package com.library.manage.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.library.manage.validation.Dateofbirth;
 @Entity
 public class PersonData {
 	@Id
@@ -15,9 +22,22 @@ public class PersonData {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 	          generator="Person_sequence")
 	private long	ID;
+
+	@NotNull(message = "It should not be null")
+    @NotEmpty(message = "It should not be Empty")
+	 @Length(min = 4,max = 15,message = "username  must be min 4  max 15 letter")
 	private String	Name;
-	private Date	DOB;
-	@Lob   
+	
+	
+	@NotNull(message = "It should not be null")
+//    @NotEmpty(message = "It should not be Empty")
+	@Dateofbirth
+	private Date DOB;
+	@Lob
+
+//	@NotNull(message = "It should not be null")
+//    @NotEmpty(message = "It should not be Empty")
+//	 @Length(min = 4,message = "Address  must be min 4   letter")
 	private String	Address;
 	
 	

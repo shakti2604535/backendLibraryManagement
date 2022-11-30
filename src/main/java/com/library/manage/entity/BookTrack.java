@@ -6,8 +6,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.library.manage.validation.ExpectedDate;
+import com.library.manage.validation.StartDate;
 
 @Entity
+
+@ExpectedDate
+
 public class BookTrack {
 
 	@Id
@@ -19,10 +30,20 @@ public class BookTrack {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 	          generator="track_sequence")
 	private Long trackId;
+	@NotNull(message = "It should not be null")
+//    @NotEmpty(message = "It should not be Empty")
+     @Min(value=1)
 	private long	bookId;
+	@NotNull(message = "It should not be null")
+	@StartDate
 	private Date	startDate;
+	@NotNull(message = "It should not be null")
 	private Date	expectedReturnDate;
+
 	private Date	actualReturnDate;
+	@NotNull(message = "It should not be null")
+//    @NotEmpty(message = "It should not be Empty")
+     @Min(value=1)
 	private long	personId;
 	
 	

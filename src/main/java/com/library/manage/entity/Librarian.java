@@ -5,7 +5,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.*;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.validation.annotation.Validated;
+
+import lombok.Data;
+
+
+//import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
+//@Validated
+@Data
 public class Librarian {
 
 	
@@ -20,10 +34,20 @@ public class Librarian {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,
 	          generator="student_sequence")
 	private Long Id;
+	@NotNull(message = "It should not be null")
+    @NotEmpty(message = "It should not be Empty")
+	 @Length(min = 4,max = 12,message = "name must be min 4 and max 12 letter")
 	private String  name;
 	
+	@NotNull(message = "It should not be null")
+    @NotEmpty(message = "It should not be Empty")
+	 @Length(min = 6,max = 15,message = "username or email must be min 6 and max 15 letter")
+      private String  emailId;
 	
-	private String  emailId;
+	@NotNull(message = "It should not be null")
+    @NotEmpty(message = "It should not be Empty")
+	 @Length(min = 6,max = 15,message = "password must be min 6 and max 15 letter")
+
 	private String  password;
 	public Long getId() {
 		return Id;

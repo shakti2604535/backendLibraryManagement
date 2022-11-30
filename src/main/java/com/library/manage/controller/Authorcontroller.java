@@ -34,13 +34,20 @@ public class Authorcontroller {
 	
 	@GetMapping("/author/{Id}")
 	public Author getauthorbyId(@PathVariable(value="Id" )long id){
-		Author author = authorRepository.findById(id).get();
-		
-		if(author != null)
-		{
+		Author author1 = new Author();
+		author1.setFirstName("");
+		try {
+			Author author = authorRepository.findById(id).get();
+			
 			return author;
+				
+		}catch(Exception e)
+		{
+			
+		return author1;
 		}
-		return null;
+	
+
 		
 	}
 	@GetMapping("/author/{BId}/{AId}")
@@ -84,6 +91,18 @@ public class Authorcontroller {
 		return al;
 
 	}
+	@PutMapping("/authorbyid/{Id}")
+	public boolean updateauthorbyid(@PathVariable(value="Id" )long id, @RequestBody Author auth) {
+	
+		Author author = authorRepository.findById(id).get();
+		author.setFirstName(auth.getFirstName());
+		author.setLastname(auth.getLastname());
+		authorRepository.save(author);
+		return true;
+	}
+	
+	
+	
 	@PutMapping("/authors/{Id}")
 	public boolean updateauthor(@PathVariable(value="Id" )long id, @RequestBody Books book) {
 		
