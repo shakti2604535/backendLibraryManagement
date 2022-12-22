@@ -24,6 +24,8 @@ public class Author {
 	@NotNull(message = "It should not be null")
     @NotEmpty(message = "It should not be Empty")
 	private String firstName;
+	@NotNull(message = "It should not be null")
+    @NotEmpty(message = "It should not be Empty")
 	private String Lastname;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

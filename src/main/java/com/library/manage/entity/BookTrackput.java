@@ -1,56 +1,43 @@
 package com.library.manage.entity;
-import  java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import java.util.Date;
+
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
-
+import com.library.manage.validation.ActualReturnDate;
 import com.library.manage.validation.ExpectedDate;
-import com.library.manage.validation.StartDate;
+import com.library.manage.validation.ExpectedDatePut;
+//import com.library.manage.validation.StartDate;
+@ExpectedDatePut   
+@ActualReturnDate
+public class BookTrackput {
 
-@Entity
-
-
-
-public class BookTrack {
-
-	@Id
-	@SequenceGenerator(
-			name = "track_sequence", 
-			sequenceName="track_sequence",
-			allocationSize = 1
-			)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	          generator="track_sequence")
+	@NotNull(message = "It should not be null")
+//  @NotEmpty(message = "It should not be Empty")
+   @Min(value=1)
 	private Long trackId;
+	@NotNull(message = "It should not be null")
 //    @NotEmpty(message = "It should not be Empty")
-    
+     @Min(value=1)
 	private long	bookId;
-
+	@NotNull(message = "It should not be null")
+	
 	private Date	startDate;
+	@NotNull(message = "It should not be null")
 	private Date	expectedReturnDate;
-
+	@NotNull(message = "It should not be null")
 	private Date	actualReturnDate;
-	
+	@NotNull(message = "It should not be null")
+//    @NotEmpty(message = "It should not be Empty")
+     @Min(value=1)
 	private long	personId;
-	
-	
-	public BookTrack() {
-		super();
-	}
 	public Long getTrackId() {
 		return trackId;
 	}
-//	public void setTrackId(Long trackId) {
-//		this.trackId = trackId;
-//	}
+	public void setTrackId(Long trackId) {
+		this.trackId = trackId;
+	}
 	public long getBookId() {
 		return bookId;
 	}
@@ -81,5 +68,5 @@ public class BookTrack {
 	public void setPersonId(long personId) {
 		this.personId = personId;
 	}
-
+	
 }

@@ -1,10 +1,12 @@
-package com.library.manage.controller;
+package com.library.manage.service;
+
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +22,15 @@ import com.library.manage.entity.Librarian;
 import com.library.manage.entity.LibrarianRequest;
 import com.library.manage.entity.loginResponse;
 import com.library.manage.filter.JwtUtil;
-import com.library.manage.service.LibrariaService;
-@CrossOrigin(origins="*")
-@RestController
-@Validated
+//@CrossOrigin(origins="*")
+//@RestController
+//@Validated
 //@RequestMapping("/get")
-public class LibrarianController {
 
-	@Autowired
-	private LibrariaService ls;
+@Service
+public class LibrariaService {
+
+	
 	 @Autowired
 	    private JwtUtil jwtUtil;
 	    @Autowired
@@ -37,53 +39,47 @@ public class LibrarianController {
 	 private LibrarianRespository librarianRespository;
 	
 	
-	
-	@PostMapping("/newlibr")
-	public boolean createnewLib( @Valid @RequestBody   Librarian librarian){
+	public boolean createnewLib(Librarian librarian){
 		
-		return ls.createnewLib(librarian);
-		
-//		Librarian lib = librarianRespository.findByEmailId(librarian.getEmailId());
-////		System.out.println("hey iam signin");
-//		if(lib != null)
-//		{
-//			return  false;
-//		}
-//		else {
-//			librarianRespository.save(librarian);
-//			return true;
-//			
-//		}
+		Librarian lib = librarianRespository.findByEmailId(librarian.getEmailId());
+//		System.out.println("hey iam signin");
+		if(lib != null)
+		{
+			return  false;
+		}
+		else {
+			librarianRespository.save(librarian);
+			return true;
+			
+		}
 	
 		
 	}
 	
-	@GetMapping("/librarian/{emailId}")
-	public Librarian getByEmailId(@PathVariable(value="emailId" ) String emailId){
+	
+	public Librarian getByEmailId(String emailId){
 		
-		
-		return  ls.getByEmailId(emailId);
-//		 Librarian librarian = librarianRespository.findByEmailId( emailId);
-//		 if(librarian != null)
-//		 {
-//			  return librarian;
-//		 }  
-////		    String e = 'eeeeeeeeeeee';
-//			 Librarian li = new Librarian();
-////			 li.setEmailId("");
-////			 li.setName("");
-////			 li.setPassword("");
-//			 return li;
-//			 
-//		 
-////		 return null;
+		 Librarian librarian = librarianRespository.findByEmailId( emailId);
+		 if(librarian != null)
+		 {
+			  return librarian;
+		 }  
+//		    String e = 'eeeeeeeeeeee';
+			 Librarian li = new Librarian();
+//			 li.setEmailId("");
+//			 li.setName("");
+//			 li.setPassword("");
+			 return li;
+			 
+		 
+//		 return null;
 	}
 	
 	//
-    @PostMapping("/authenticate")
+  
     
-    public loginResponse generateToken(@RequestBody @Valid AuthRequest authRequest) throws Exception {
-    /*	  loginResponse lr = new loginResponse();
+    public loginResponse generateToken( AuthRequest authRequest) throws Exception {
+    	  loginResponse lr = new loginResponse();
     	try {
 //        	  loginResponse lr = new loginResponse();
         	System.out.println("hhhhhhhhhhhhhhh");
@@ -102,7 +98,5 @@ public class LibrarianController {
         	lr.setToken(jwtUtil.generateToken(authRequest.getUserName()));
         	lr.setStatuscode(200);
         	return lr;
-    } */
-    	 return ls.generateToken(authRequest);
     }
 }

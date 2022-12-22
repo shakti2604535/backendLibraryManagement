@@ -2,20 +2,19 @@ package com.library.manage.validation;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import com.library.manage.entity.BookTrack;
-import com.library.manage.entity.BookTrackset;
+import com.library.manage.entity.BookTrackput;
 
-public class ExpectedValidator implements ConstraintValidator<ExpectedDate,BookTrackset> { 
+public class ExpectedDateputvalidator implements ConstraintValidator<ExpectedDatePut,BookTrackput> { 
 
 
 
 @Override
-public boolean isValid(BookTrackset value, ConstraintValidatorContext context) {
+public boolean isValid(BookTrackput value, ConstraintValidatorContext context) {
 	// TODO Auto-generated method stub
 	
 	if(value.getStartDate() == null || value.getExpectedReturnDate() == null)
@@ -34,14 +33,19 @@ public boolean isValid(BookTrackset value, ConstraintValidatorContext context) {
 	   context.buildConstraintViolationWithTemplate("test");
 		   return false;
 	   }
-	   if(zdt.getMonthValue() - zdt1.getMonthValue() > 0)
-	   {
+	   else {
+	     if(zdt.getMonthValue() - zdt1.getMonthValue() > 0)
+	          {
 		   return false;
-	   }
-	   if(zdt.getDayOfMonth() - zdt1.getDayOfMonth()>0)
-	   {
+	       }
+	     else {
+	      if(zdt.getDayOfMonth() - zdt1.getDayOfMonth()>0 && zdt.getMonthValue() - zdt1.getMonthValue() == 0 )
+	       {
 		   return false;
+	      }
+	     }
 	   }
+	   
 	return true;
 }
 }

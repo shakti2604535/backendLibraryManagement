@@ -24,103 +24,50 @@ import com.library.manage.entity.BookTrack;
 import com.library.manage.entity.Books;
 import com.library.manage.entity.PersonData;
 import com.library.manage.entity.PersonDetails;
+import com.library.manage.service.PersonService;
 
 @CrossOrigin(origins="http://localhost:4200")
 @RestController
 @RequestMapping("/get")
 public class PersonController {
 	
-@Autowired
-private PersonRepository personRepository;
-@Autowired
-private BooksRepository booksRepository;
-@Autowired
-private BookTrackRepository bookTrackRepository;
+	
+	@Autowired
+	private PersonService ps;
+//@Autowired
+//private PersonRepository personRepository;
+//@Autowired
+//private BooksRepository booksRepository;
+//@Autowired
+//private BookTrackRepository bookTrackRepository;
 	
 	@GetMapping("/person/{Id}")
 	public PersonData getauthorbyId(@PathVariable(value="Id" )long id){
-		try {
-		PersonData person = personRepository.findById(id).get();
-		
-		if(person != null)
-		{
-			return person;
-		}
-		
-		}
-		catch(Exception e){
-			PersonData person1 = new PersonData();
-			person1.setName("");
-			System.out.println("hiiiiiiiiiiiii");
-			return person1;
-		}
-		return null;
+	return ps.getauthorbyId(id);
 		
 	
 	}
 	@GetMapping("/persons")
 	public List<PersonData> getallpersons(){
-		   List<PersonData> person = personRepository.findAll();
+		  
 		
 		
-			return person;
+			return ps.getallpersons();
 		
 	}
 	@GetMapping("/personsdetail")
 	public List<PersonDetails> getallpersondetails(){
-		   List<PersonData> person = personRepository.findAll();
-		   List<PersonDetails>persondetail =  new ArrayList<>();
-		   
-		   for(int i = 0;i<person.size();i++) {
-			   long personId = person.get(i).getID();
-			   PersonDetails pd = new PersonDetails();
-			   pd.setPersonId(personId);
-			   pd.setPersonDob(person.get(i).getDOB());
-			   pd.setPersonAddress(person.get(i).getAddress());
-			   pd.setPersonName(person.get(i).getName());
-			   
-			   List<BookTrack> booktrack = bookTrackRepository.findByPersonId(personId);
-			   String Rentedbyperson = "";
-			   String OverdueBooks = "";
-			   Date date = new Date();
-			   for(BookTrack bt:booktrack)
-			   {
-				    Books book = booksRepository.findById(bt.getBookId()).get();
-				    if(bt.getActualReturnDate() ==null) {
-				    Rentedbyperson += book.getTitle()+" ,";
-				    if(bt.getExpectedReturnDate().before(date))
-				    {
-				    	System.out.println(date);
-				    	System.out.println(bt.getExpectedReturnDate().before(date));
-				    	
-				    	OverdueBooks += book.getTitle()+",";
-				    	System.out.println(OverdueBooks);
-				    	}
-				    }
-			   }
-			   pd.setPersonRentedBook(Rentedbyperson);
-			   pd.setPersonOverdueBook(OverdueBooks);
-			   persondetail.add(pd);
-		   }
-		   return persondetail;
-		
-		
+	return ps.getallpersondetails();
 			
 		
 	}
 	@PostMapping("/addperson")
 	public PersonData createauthor( @RequestBody @Valid PersonData person) {
-		 return personRepository.save(person);
+		 return ps.createauthor(person);
 	}
 	@PutMapping("/updateperson/{Id}")
-	public boolean updateauthor(@PathVariable(value="Id" )long id, @RequestBody PersonData personData) {
-		PersonData personData1 = personRepository.findById(id).get();
-		personData1.setName(personData.getName());
-		personData1.setAddress(personData.getAddress());
-		personData1.setDOB(personData.getDOB());
-		personRepository.save(personData1);
-		
-		return true;
+	public boolean updateauthor(@PathVariable(value="Id" )long id, @RequestBody @Valid PersonData personData) {
+		return ps.updateauthor(id, personData);
 		
 	}
 
