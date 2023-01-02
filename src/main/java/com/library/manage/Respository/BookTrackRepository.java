@@ -10,7 +10,8 @@ public interface BookTrackRepository extends JpaRepository<BookTrack,Long>{
 
 	
 	BookTrack findByPersonIdAndBookId(long bookId,long personId);
-	List<BookTrack> findByBookId(long bookId);
-	List<BookTrack>findByPersonId(long personId);
+	List<BookTrack> findByBookIdBookId(long bookId);
+	List<BookTrack>findByPersonIdID(long personId);   
+	List<BookTrack>findByActualReturnDateIsNull();  
 }
     

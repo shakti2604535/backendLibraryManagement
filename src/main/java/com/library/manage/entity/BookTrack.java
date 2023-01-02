@@ -2,9 +2,12 @@ package com.library.manage.entity;
 import  java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -12,9 +15,12 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.library.manage.validation.ExpectedDate;
 import com.library.manage.validation.StartDate;
 
+
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 @Entity
 
 
@@ -32,14 +38,18 @@ public class BookTrack {
 	private Long trackId;
 //    @NotEmpty(message = "It should not be Empty")
     
-	private long	bookId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "BOOK_ID")
+	private Books	bookId;
 
 	private Date	startDate;
 	private Date	expectedReturnDate;
 
 	private Date	actualReturnDate;
 	
-	private long	personId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "PERSON_ID")
+	private PersonData	personId;
 	
 	
 	public BookTrack() {
@@ -51,14 +61,15 @@ public class BookTrack {
 //	public void setTrackId(Long trackId) {
 //		this.trackId = trackId;
 //	}
-	public long getBookId() {
-		return bookId;
-	}
-	public void setBookId(long bookId) {
-		this.bookId = bookId;
-	}
+	
 	public Date getStartDate() {
 		return startDate;
+	}
+	public Books getBookId() {
+		return bookId;
+	}
+	public void setBookId(Books bookId) {
+		this.bookId = bookId;
 	}
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
@@ -75,11 +86,12 @@ public class BookTrack {
 	public void setActualReturnDate(Date actualReturnDate) {
 		this.actualReturnDate = actualReturnDate;
 	}
-	public long getPersonId() {
+	public PersonData getPersonId() {
 		return personId;
 	}
-	public void setPersonId(long personId) {
+	public void setPersonId(PersonData personId) {
 		this.personId = personId;
 	}
+
 
 }

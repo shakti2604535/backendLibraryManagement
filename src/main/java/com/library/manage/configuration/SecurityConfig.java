@@ -22,6 +22,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 //import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
+import com.library.manage.filter.AuthenticationPoint;
 import com.library.manage.filter.JwtFilter;
 import com.library.manage.service.CustomUserDetailsService;
 
@@ -35,6 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtFilter jwtFilter;
+    @Autowired
+    private AuthenticationPoint entrypoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -53,9 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().configurationSource(configurationSource()).and().authorizeRequests().antMatchers("/authenticate","/newlibr")
+        http.csrf().disable().cors().configurationSource(configurationSource()).and().authorizeRequests()
+        		.antMatchers("/authenticate","/newlibr", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**")
                 .permitAll().anyRequest().authenticated()
-                .and().exceptionHandling().and().sessionManagement()
+                .and().exceptionHandling().authenticationEntryPoint(entrypoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     
     	    

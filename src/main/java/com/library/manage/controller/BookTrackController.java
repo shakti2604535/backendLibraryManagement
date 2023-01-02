@@ -49,7 +49,7 @@ public class BookTrackController {
 		return bt.getbooktrackwithname();
 		
 	}
-	
+//	
 	@GetMapping("/book/{id}")
 	public List<BookTrackDetails>getrentedbookbyid(@PathVariable(value="id") long bookid){
 	return bt.getrentedbookbyid(bookid);
@@ -61,8 +61,8 @@ public class BookTrackController {
    return bt.Assignbooktoperson(bookTrack);
 		
 	}
-	
-	
+//	
+//	
 	@PutMapping("/returnbook/{btId}")
 	public Boolean  Returnbooktoperson(  @PathVariable(value="btId") Long btId, @RequestBody @Valid BookTrackput bookTrack1)
 	{

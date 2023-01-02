@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.library.manage.Respository.AuthorRepository;
 import com.library.manage.Respository.BooksRepository;
+import com.library.manage.entity.ApiResponse;
 import com.library.manage.entity.Author;
 import com.library.manage.entity.AuthorAllBooks;
 import com.library.manage.entity.AuthorDetails;
+import com.library.manage.entity.Book;
 import com.library.manage.entity.Books;
 import com.library.manage.service.AuthorService;
 
@@ -34,19 +37,27 @@ public class Authorcontroller {
 	@Autowired
 	private AuthorService as;
 	
-	@GetMapping("/author/{Id}")
+	@GetMapping("/{Id}")
 	public Author getauthorbyId(@PathVariable(value="Id" )long id){
 	 return as.getauthorbyId(id);
 
 		
 	}
-	@GetMapping("/author/{BId}/{AId}")
-	public AuthorAllBooks getauthorbyIds(@PathVariable(value="BId" )long BId,@PathVariable(value="AId" )long AId){
-		
-         return as.getauthorbyIds(BId, AId);
-
-	}
-	@PutMapping("/authorbyid/{Id}")
+//	@GetMapping("bookscount/{os}/{ps}")
+//	public ApiResponse<List<AuthorAllBooks>> countbooks(@PathVariable(value="os") int os,@PathVariable(value="ps") int ps){
+//		
+//		return as.countbooks(os, ps);
+//		
+//	}
+//	
+	
+//	@GetMapping("/author/{BId}/{AId}")
+//	public AuthorAllBooks getauthorbyIds(@PathVariable(value="BId" )long BId,@PathVariable(value="AId" )long AId){
+//		
+//         return as.getauthorbyIds(BId, AId);
+//
+//	}
+	@PutMapping("/update/{Id}")
 	public boolean updateauthorbyid(@PathVariable(value="Id" )long id, @RequestBody @Valid Author auth) {
 	
 		return as.updateauthorbyid(id, auth);
@@ -54,54 +65,54 @@ public class Authorcontroller {
 	
 	
 	
-	@PutMapping("/authors/{Id}")
-	public boolean updateauthor(@PathVariable(value="Id" )long id, @RequestBody Books book) {
-		
-          return as.updateauthor(id, book);
-		
-	}
-	@GetMapping("/authors")
-	public List<Author> getallauthor(){
-		return as.getallauthor();
-		
-	}
+//	@PutMapping("/authors/{Id}")
+//	public boolean updateauthor(@PathVariable(value="Id" )long id,  @RequestBody  @Valid Book book) {
+//		
+//          return as.updateauthor(id, book);
+//		
+//	}
+//	@GetMapping("/authors")
+//	public List<Author> getallauthor(){
+//		return as.getallauthor();
+//		
+//	}
 	
-	@GetMapping("/authorse")
-	public List<AuthorAllBooks> getallauthors(){
-        return as.getallauthors();
-		
-	}
-	
-	
-	@GetMapping("authorwith")
-	public List<AuthorAllBooks>authornamecontain(@RequestParam(value="val") String val)
-	{
-		
-	return as.authornamecontain(val);
-		
-	}
+//	@GetMapping("/authorse")
+//	public List<AuthorAllBooks> getallauthors(){
+//        return as.getallauthors();
+//		
+//	}
 	
 	
+//	@GetMapping("authorwith")
+//	public List<AuthorAllBooks>authornamecontain(@RequestParam(value="val") String val)
+//	{
+//		
+//	return as.authornamecontain(val);
+//		
+//	}
 	
 	
 	
 	
-	@PostMapping("/addauthor")
+	
+	
+	@PostMapping("/create")
 	public Author createauthor( @RequestBody  @Valid Author author) {
 		 return as.createauthor(author);
 	}
-	@PutMapping("{bId}/book/{aId}")
-	public boolean assignbookToauthor( @PathVariable(value="bId") Long bId,   @PathVariable(value="aId")Long aId) {
-		
-		
-	return as.assignbookToauthor(bId, aId);
-		
-	}
-	@GetMapping("/authorsbybook/{id}")
-	public List<Author> getallauthorbyid(@PathVariable(value="id")long id ){
-		return as.getallauthorbyid(id);
-		
-	}
+//	@PutMapping("{bId}/book/{aId}")
+//	public boolean assignbookToauthor( @PathVariable(value="bId") Long bId,   @PathVariable(value="aId")Long aId) {
+//		
+//		
+//	return as.assignbookToauthor(bId, aId);
+//		
+//	}
+//	@GetMapping("/authorsbybook/{id}")
+//	public List<Author> getallauthorbyid(@PathVariable(value="id")long id ){
+//		return as.getallauthorbyid(id);
+//		
+//	}
 	@GetMapping("/authorsdetails")
 	public List<AuthorDetails> getallauthorDetail(){
 	return as.getallauthorDetail();   

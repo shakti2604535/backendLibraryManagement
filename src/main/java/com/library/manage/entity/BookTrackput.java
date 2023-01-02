@@ -13,22 +13,23 @@ import com.library.manage.validation.ExpectedDatePut;
 @ActualReturnDate
 public class BookTrackput {
 
-	@NotNull(message = "It should not be null")
+	@NotNull(message = "trackId should not be null")
 //  @NotEmpty(message = "It should not be Empty")
    @Min(value=1)
 	private Long trackId;
-	@NotNull(message = "It should not be null")
+	@NotNull(message = "bookId should not be null")
 //    @NotEmpty(message = "It should not be Empty")
      @Min(value=1)
 	private long	bookId;
-	@NotNull(message = "It should not be null")
+	@NotNull(message = " startDate should not be null")
 	
 	private Date	startDate;
-	@NotNull(message = "It should not be null")
+	@NotNull(message = "expectedReturnDate should not be null")
 	private Date	expectedReturnDate;
-	@NotNull(message = "It should not be null")
+	@NotNull(message = "expectedReturnDate should not be null")
+	
 	private Date	actualReturnDate;
-	@NotNull(message = "It should not be null")
+	@NotNull(message = "personId should not be null")
 //    @NotEmpty(message = "It should not be Empty")
      @Min(value=1)
 	private long	personId;

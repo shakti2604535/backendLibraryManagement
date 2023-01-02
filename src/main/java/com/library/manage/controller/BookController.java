@@ -5,6 +5,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -24,9 +28,13 @@ import com.library.manage.Respository.BookTrackRepository;
 import com.library.manage.Respository.BooksRepository;
 import com.library.manage.entity.ApiResponse;
 import com.library.manage.entity.Author;
+import com.library.manage.entity.AuthorAllBooks;
+import com.library.manage.entity.Book;
 import com.library.manage.entity.BookDetails;
+import com.library.manage.entity.BookQueryData;
 import com.library.manage.entity.BookTrack;
 import com.library.manage.entity.Books;
+import com.library.manage.entity.CreateAuthorBook;
 import com.library.manage.service.BookService;
 
 @CrossOrigin(origins="http://localhost:4200")
@@ -35,35 +43,59 @@ import com.library.manage.service.BookService;
 public class BookController {
 	@Autowired
 	private BookService bs;
-	@GetMapping("/book/{Id}")
+	@GetMapping("/{Id}")
 	public Books getbookbyId(@PathVariable(value="Id" )long id){
 		 return bs.getbookbyId(id);
 		
 	}
-	@GetMapping("/books")
-	public List<BookDetails> getbookbyId(){
-		return bs.getbookbyId();
-			
+//	@GetMapping("/books")
+//	public List<BookDetails> getallbooks(){
+//		return bs.getallbooks();
+//			
+//		
+//	}
+//	@Autowired
+//	private BooksRepository br;
+
+//	 List<Map<String, Object>
+	@GetMapping("/rented")
+	public List<BookQueryData>getbook()
+	
+	{
+		return  bs.getbook();
+		 
+	}
+//	@GetMapping("/bookss")
+//	public List<BookDetails> getallbookss(){
+//		return bs.getallbooks();
+//			
+//		
+//	}
+	
+	@PostMapping("/create/{Id}")
+	public boolean createbook(@PathVariable(value="Id" )long id,  @RequestBody  @Valid Book book) {
+		
+          return bs.createbook(id, book);
 		
 	}
 	
-	@GetMapping("onlybooks")
+	@GetMapping("/onlybooks")
 	public List<Books> createBook( ) {
 		 return bs.createBook();
 	}
 	//////////////////////
 	
-	@GetMapping("bookscount/{os}/{ps}")
-	public ApiResponse<Page<Books>>countbooks(@PathVariable(value="os") int os,@PathVariable(value="ps") int ps){
+	@GetMapping("pagination/{os}/{ps}")
+	public  CreateAuthorBook countbooks(@PathVariable(value="os") int os,@PathVariable(value="ps") int ps){
 		
 		return bs.countbooks(os, ps);
 		
 	}
 	
-	@GetMapping("booksbyname/{os}/{ps}/{bn}")
-	public ApiResponse<Page<Books>>bookbynamepage(@PathVariable(value="os") int os,@PathVariable(value="ps") int ps,@PathVariable(value="bn") String bn){
+	@GetMapping("namepagination")
+	public CreateAuthorBook bookbynamepage(@RequestParam(value="os") int os,@RequestParam(value="ps") int ps,@RequestParam(value="val") String bn){
 		
-return bs.bookbynamepage(os, ps, bn);
+         return bs.bookbynamepage(os, ps, bn);
 	}
 	/////////////////////////
 	
@@ -72,11 +104,11 @@ return bs.bookbynamepage(os, ps, bn);
 	
 	
 	
-	@PostMapping("/addbook")
-	public boolean createBook( @RequestBody Books book) {
-//		System.out.println(book.getPageCount());
-		return bs.createBook(book);
-	}
+//	@PostMapping("/addbook")
+//	public boolean createBook( @RequestBody Books book) {
+////		System.out.println(book.getPageCount());
+//		return bs.createBook(book);
+//	}
 	
 	
          @PutMapping("/updatebook/{id}")
@@ -86,6 +118,12 @@ return bs.bookbynamepage(os, ps, bn);
          }
          
          
+     	@GetMapping("/author/{BId}/{AId}")
+    	public AuthorAllBooks getauthorbyIds(@PathVariable(value="BId" )long BId,@PathVariable(value="AId" )long AId){
+    		
+             return bs.getauthorbyIds(BId, AId);
+
+    	}
          
 //         public Pagination<List<BookDetails>>
 

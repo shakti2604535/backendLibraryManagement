@@ -5,39 +5,40 @@ import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+//import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.library.manage.validation.PublishDate;
 
 
 
-@Entity
-public class Books {
-	@Id
-	@SequenceGenerator(
-			name = "Book_sequence", 
-			sequenceName="Book_sequence",
-			allocationSize = 1
-			)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,
-	          generator="Book_sequence")
-	private Long bookId;
-	@NotNull
-	 @Length(min = 4,max = 15,message = "username  must be min 4  max 15 letter")
-	private String 	title;
 
-	private String	description;
-	private int	pageCount;
-	private Date	publishDate;  
+public class Book {
 	
+	
+	@NotNull( message="can not empty or null")
+	 @Length(min = 4,max = 15,message = "title  must be min 4  max 15 letter")
+	private String 	title;
+	@NotNull( message="can not empty or null")
+	 @Length(min = 4,max = 25,message = "description  must be min 4  max 25 letter")
+	private String	description;
+	@NotNull( message="can not empty or null")
+
+	@Min(value=100 ,message=" Pagecount min 50 required")
+
+	private int	pageCount;
+	@PublishDate
+	private Date	publishDate;  
+	@NotNull( message=" availableStockcan not empty or null")
+	 @Min(value=2,message=" availableStock min 2 required")
 	private	int availableStock;
 //	
-	@JsonIgnore
-    @ManyToMany(mappedBy = "books" )
-	private List<Author>author;
-	public Books() {
+	
+	public Book() {
 		super();
 	}
 	
@@ -45,7 +46,7 @@ public class Books {
 
 
 
-	public Books(String title, String description, int pageCount, Date publishDate, int availableStock) {
+	public Book(String title, String description, int pageCount, Date publishDate, int availableStock) {
 		super();
 		this.title = title;
 		this.description = description;
@@ -53,23 +54,13 @@ public class Books {
 		this.publishDate = publishDate;
 		this.availableStock = availableStock;
 	}
-	public Long getBookId() {
-		return bookId;
-	}
+
 //	public void setBookId(Long bookId) {
 //		this.bookId = bookId;
 //	}
 
 	public String getTitle() {
 		return title;
-	}
-	public List<Author> getAuthor() {
-		return author;
-	}
-
-
-	public void setAuthor(List<Author> author) {
-		this.author = author;
 	}
 
 

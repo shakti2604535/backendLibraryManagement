@@ -39,22 +39,13 @@ private BookTrackRepository bookTrackRepository;
 	
 	
 	public PersonData getauthorbyId(long id){
-		try {
+		
 		PersonData person = personRepository.findById(id).get();
 		
-		if(person != null)
-		{
-			return person;
-		}
 		
-		}
-		catch(Exception e){
-			PersonData person1 = new PersonData();
-			person1.setName("");
-			System.out.println("hiiiiiiiiiiiii");
-			return person1;
-		}
-		return null;
+			return person;
+		
+		
 		
 	
 	}
@@ -79,7 +70,7 @@ private BookTrackRepository bookTrackRepository;
 			   pd.setPersonAddress(person.get(i).getAddress());
 			   pd.setPersonName(person.get(i).getName());
 			   
-			   List<BookTrack> booktrack = bookTrackRepository.findByPersonId(personId);
+			   List<BookTrack> booktrack = bookTrackRepository.findByPersonIdID(personId);
 //			   String Rentedbyperson = "";
 			   StringJoiner OverdueBooks = new StringJoiner(
 					      ", ", "", "");
@@ -88,7 +79,7 @@ private BookTrackRepository bookTrackRepository;
 					      ", ", "", "");
 			   for(BookTrack bt:booktrack)
 			   {
-				    Books book = booksRepository.findById(bt.getBookId()).get();
+				    Books book = booksRepository.findById(bt.getBookId().getBookId()).get();
 				    if(bt.getActualReturnDate() ==null) {
 				    	
 				    	Rentedbyperson.add(book.getTitle());

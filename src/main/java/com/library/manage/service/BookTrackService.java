@@ -27,6 +27,7 @@ import com.library.manage.entity.BookTrackput;
 import com.library.manage.entity.BookTrackset;
 import com.library.manage.entity.Books;
 import com.library.manage.entity.PersonData;
+import com.library.manage.exception.ResourceNotFoundException;
 
 @Service
 public class BookTrackService {
@@ -57,28 +58,29 @@ public class BookTrackService {
 			 
 			 BookTrackDetails bookTrackDetails = new BookTrackDetails();
 			 bookTrackDetails.setBooktrack(bt.get(i));
-			 Books b = booksRepository.findById(bt.get(i).getBookId()).get();
+//			 Books b = booksRepository.findById(bt.get(i).getBookId()).get();
+//			
+//
+//			 PersonData p = personRepository.findById(bt.get(i).getPersonId()).get();
 			
-
-			 PersonData p = personRepository.findById(bt.get(i).getPersonId()).get();
-			
-			 bookTrackDetails.setTitle(b.getTitle());
-			 bookTrackDetails.setPersonName(p.getName());
+			 bookTrackDetails.setTitle(bt.get(i).getBookId().getTitle());
+			 bookTrackDetails.setPersonName(bt.get(i).getPersonId().getName());
 			 btd.add(bookTrackDetails);
 		 }
 		 return btd;
 		
 		
 	}
-	
-
+//	
+//
 	public List<BookTrackDetails>getrentedbookbyid( long bookid){
 		
-		List<BookTrack>bt = bookTrackRepository.findByBookId(bookid);
+		List<BookTrack>bt = bookTrackRepository.findByBookIdBookId(bookid);
 		List<BookTrackDetails>bk = new ArrayList<>();
 		if(bt.isEmpty())
 		{
-			return  null ;
+			throw new ResourceNotFoundException("Book","BookId",bookid);
+//			return  null ;
 		}
 		for(int i = 0;i<bt.size();i++)
 		{
@@ -88,13 +90,13 @@ public class BookTrackService {
 			{
 				 BookTrackDetails bookTrackDetails = new BookTrackDetails();
 				 bookTrackDetails.setBooktrack(bt.get(i));
-				 Books b = booksRepository.findById(bt.get(i).getBookId()).get();
-					
-
-				 PersonData p = personRepository.findById(bt.get(i).getPersonId()).get();
+//				 Books b = booksRepository.findById(bt.get(i).getBookId()).get();
+//					
+//
+//				 PersonData p = personRepository.findById(bt.get(i).getPersonId()).get();
 				
-				 bookTrackDetails.setTitle(b.getTitle());
-				 bookTrackDetails.setPersonName(p.getName());
+				 bookTrackDetails.setTitle(bt.get(i).getBookId().getTitle());
+				 bookTrackDetails.setPersonName(bt.get(i).getPersonId().getName());
 				bk.add(bookTrackDetails);
 			}
 		}
@@ -105,24 +107,27 @@ public class BookTrackService {
 		
 		
 	}
-
+//
 	public Boolean  Assignbooktoperson(  BookTrackset bookTrack) {
 		BookTrack bookTrack1 =  new BookTrack();
 	bookTrack1.setActualReturnDate(bookTrack.getActualReturnDate());
-	bookTrack1.setBookId(bookTrack.getBookId());
+	Books book = booksRepository.findById(bookTrack.getBookId()).get();
+	PersonData person = personRepository.findById(bookTrack.getPersonId()).get();
+//	bookTrack1.setBookId (book);
 	bookTrack1.setExpectedReturnDate(bookTrack.getExpectedReturnDate());
 	bookTrack1.setStartDate(bookTrack.getStartDate());
-	bookTrack1.setPersonId(bookTrack.getPersonId());
+	bookTrack1.setPersonId(person);
 		try {
-		Books book = booksRepository.findById(bookTrack.getBookId()).get();
-		PersonData person = personRepository.findById(bookTrack.getPersonId()).get();
+//		Books book = booksRepository.findById(bookTrack.getBookId()).get();
+//		PersonData person = personRepository.findById(bookTrack.getPersonId()).get();
 		if(book!= null && person!=null && book.getAvailableStock()>0)
 		{  
 			
 			if(bookTrack.getStartDate().before(bookTrack.getExpectedReturnDate()))
-			{
+			{        
 				book.setAvailableStock(book.getAvailableStock()-1);
-				booksRepository.save(book);
+//				booksRepository.save(book);
+				bookTrack1.setBookId (book);
 				System.out.println("i am checking");
 			 bookTrackRepository.save(bookTrack1);
 			 return true;
@@ -137,9 +142,9 @@ public class BookTrackService {
 		}
 		
 	}
-	
-	
-	
+//	
+//	
+//	
 	public Boolean  Returnbooktoperson(   Long btId,  BookTrackput bookTrack1)
 	{
 		BookTrack booktrack = bookTrackRepository.findById(btId).get();
@@ -154,9 +159,13 @@ public class BookTrackService {
 		 System.out.println(zdt.getDayOfMonth());
 			   if(zdt1.getDayOfMonth() == zdt.getDayOfMonth() && zdt1.getMonth() == zdt.getMonth())
 			   {
-			   Books book = booksRepository.findById(booktrack.getBookId()).get();
+//				    
+			   Books book = booktrack.getBookId();
+					   //booksRepository.findById(booktrack.getBookId()).get();
+			   
 			   book.setAvailableStock(book.getAvailableStock()+1);
-			   booksRepository.save(book);
+//			   booksRepository.save(book);
+			   booktrack.setBookId(book);
 			   booktrack.setActualReturnDate(bookTrack1.getActualReturnDate());
 			     bookTrackRepository.save(booktrack);
 			   return true;

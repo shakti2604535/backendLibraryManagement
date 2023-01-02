@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.library.manage.Respository.AuthorRepository;
 import com.library.manage.Respository.BooksRepository;
+import com.library.manage.entity.ApiResponse;
 import com.library.manage.entity.Author;
 import com.library.manage.entity.AuthorAllBooks;
 import com.library.manage.entity.AuthorDetails;
+import com.library.manage.entity.Book;
 import com.library.manage.entity.Books;
+import com.library.manage.exception.ResourceNotFoundException;
 
 
 @Service
@@ -35,18 +40,12 @@ public class AuthorService {
 	
 
 	public Author getauthorbyId(long id){
-		Author author1 = new Author();
-		author1.setFirstName("");
-		try {
+	
 			Author author = authorRepository.findById(id).get();
 			
 			return author;
 				
-		}catch(Exception e)
-		{
-			
-		return author1;
-		}
+		
 	
 
 		
@@ -61,7 +60,8 @@ public class AuthorService {
 	 Author a = new Author();
 		if(!author.isPresent())
 		{
-			return null;
+			throw new ResourceNotFoundException("Author","AuthorId",AId);
+//			return  null ;
 		}
 		else
 		{
@@ -71,7 +71,8 @@ public class AuthorService {
 		Optional<Books> book = booksRepository.findById(BId);
 		if(!book.isPresent())
 		{
-			return null;
+			throw new ResourceNotFoundException("Book","BookId",BId);
+//			return  null ;
 		}
 		else
 		{
@@ -104,7 +105,7 @@ public class AuthorService {
 	
 	
 	
-	public boolean updateauthor(long id,  Books book) {
+	public boolean updateauthor(long id,  Book book) {
 		
 //		  System.out.println(book.getAvailableStock());
 //		return true;
@@ -120,21 +121,29 @@ public class AuthorService {
 		{
 			return false;
 		}
-		long bookid = booksRepository.save(book).getBookId();
-		System.out.println(bookid);
 		long authorid = id;
+		Books b =  new Books();
+		b.setAvailableStock(book.getAvailableStock());
+		b.setDescription(book.getDescription());
+		b.setPageCount(book.getPageCount());
+		b.setPublishDate(book.getPublishDate());
+		b.setTitle(book.getTitle());
 		 Author author = authorRepository.findById(authorid).get();
+		long bookid = booksRepository.save(b).getBookId();
+		System.out.println(bookid);
+//		long authorid = id;
+	
 		
-		List<Author>auth =     authorRepository.findByBooksBookId(bookid);
-	       if(auth.contains(author))
-	       {
-	    	   return false;
-	       }
+//		List<Author>auth =     authorRepository.findByBooksBookId(bookid);
+//	       if(auth.contains(author))
+//	       {
+//	    	   return false;
+//	       }
 	        if(book != null && author != null) {
 	          List<Books> a = author.getBooks();
 //	        projectSet =  employee.getAssignedProjects();
 //	        projectSet.add(project);\
-	          a.add(book);
+	          a.add(b);
 //	        employee.setAssignedProjects(projectSet);
 	          author.setBooks(a);
 	         authorRepository.save(author);
@@ -188,6 +197,46 @@ public class AuthorService {
 			return authors;
 		
 	}
+	
+public ApiResponse<List<AuthorAllBooks>>countbooks( int os,int ps){
+		
+		Page<Author>author1 = authorRepository.findAll(PageRequest.of(os, ps));
+		  List<Author> author = author1.getContent();
+		   List<AuthorAllBooks>authors = new ArrayList<>();
+			  // Author at = new Author();
+			  
+			 for(int i = 0;i<author.size();i++)
+			 {  
+				 for(int j = 0;j<author.get(i).getBooks().size();j++)
+				 {
+					 AuthorAllBooks at = new AuthorAllBooks();
+					 at.setId(author.get(i).getAuthorId());
+					 at.setFirstname(author.get(i).getFirstName());
+					 at.setLastname(author.get(i).getLastname());
+					 Books b = author.get(i).getBooks().get(j);
+					 at.setBookId(b.getBookId());
+					 at.setAvailableStock(b.getAvailableStock());
+					 at.setDescription(b.getDescription());
+					 at.setPageCount(b.getPageCount());
+					 at.setPublishDate(b.getPublishDate());
+					 at.setTitle(b.getTitle());
+					
+					 
+					 
+//					 System.out.println(author.get(i).getBooks().get(j).getTitle());
+//					 System.out.println(at.getBook().getBookId());
+					 authors.add(at);
+				 }
+			 }
+			
+			
+				
+		return new ApiResponse<>(authors.size(),authors);
+		
+	}
+	
+	
+	
 	
 	
 	
@@ -276,6 +325,8 @@ public class AuthorService {
 	}
 
 	public List<AuthorDetails> getallauthorDetail(){
+		
+//		int a = 5/0;
 		   List<Author> author = authorRepository.findAll();
 		   List<AuthorDetails> authorDetail = new ArrayList<>();
 		  

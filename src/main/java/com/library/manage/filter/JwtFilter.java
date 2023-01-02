@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.library.manage.exception.ResourceNotFoundException;
 import com.library.manage.service.CustomUserDetailsService;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -36,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
-
+        
         String token = null;
         String userName = null;
 
@@ -47,17 +48,21 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
-//                response.sendError(response.SC_UNAUTHORIZED, "Unable to get JWT Token");
+//                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
                 System.out.println("JWT Token has expired");
-//                response.sendError(response.SC_UNAUTHORIZED, "JWT Token has expired");
+//                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT Token has expired");
             }
             catch(SignatureException e){
-//                response.sendError(response.SC_UNAUTHORIZED, "Invalid Token");
-                throw new SignatureException("Invalid Token");
+//            	httpServletResponse.sendError(404, userName);
+            	 System.out.println("Invalid");
+//            	httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
+//                throw   new SignatureException("Invalid");
             }catch(MalformedJwtException e) {
-//                response.sendError(response.SC_UNAUTHORIZED, "Invalid Token");
-                throw new MalformedJwtException("Invalid Token");
+           	 System.out.println("Invalid");
+
+//            	httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
+//          				throw new MalformedJwtException("Invalid Token");
             }
         }
 

@@ -9,6 +9,7 @@ import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.library.manage.validation.ActualReturnDate;
 import com.library.manage.validation.ExpectedDate;
 import com.library.manage.validation.StartDate;
 @ExpectedDate
@@ -25,7 +26,8 @@ public class BookTrackset {
 		private Date	startDate;
 		@NotNull(message = "It should not be null")
 		private Date	expectedReturnDate;
-
+        
+		
 		private Date	actualReturnDate;
 		@NotNull(message = "It should not be null")
 //	    @NotEmpty(message = "It should not be Empty")
